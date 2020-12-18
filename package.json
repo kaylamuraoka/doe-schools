@@ -1,0 +1,30 @@
+{
+  "name": "doe-schools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaylamuraoka/doe-schools.git"
+  },
+  "keywords": [
+    "nodejs",
+    "mysql",
+    "express"
+  ],
+  "author": "Kayla Muraoka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kaylamuraoka/doe-schools/issues"
+  },
+  "homepage": "https://github.com/kaylamuraoka/doe-schools#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {}
+}
