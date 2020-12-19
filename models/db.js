@@ -4,4 +4,3 @@ const env = require("./../env");
 
 // Create the database instance
 const database = new Prohairesis(env.CLEARDB_DATABASE_URL);
-module.exports = database;

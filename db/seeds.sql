@@ -1,3 +1,2 @@
-INSERT INTO burgers (burger_name, devoured) VALUES ("Tofu Veggie Burger", FALSE);
-INSERT INTO burgers (burger_name, devoured) VALUES ("Spicy Vegan Black Bean Burger", TRUE);
-INSERT INTO burgers (burger_name, devoured) VALUES ("Grilled Portobello Burger", FALSE);
+INSERT INTO `users` (username, password, email, first_name, last_name, created_at) VALUES 
+('test', 'testpassword', 'test@test.com', 'test', 'test', NOW());

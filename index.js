@@ -1,40 +1,71 @@
 // DEPENDENCIES
 // Series of npm packages that we will use to give our server useful functionality
 const express = require("express");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
+const mysql = require("mysql");
+require("dotenv").config();
 
 // EXPRESS CONFIGURATION
-// This sets up the basic properties for our express server
-
-// Tells node that we are creating an "express" server
+// Create express app instance.
 const app = express();
 
-// Sets an initial port. We"ll use this later in our listener
+// Set the port of our application
+// process.env.PORT lets the port be set by Heroku
 const PORT = process.env.PORT || 8080;
 
-// Sets up the Express app to handle data parsing
-app.use(morgan("dev"));
+// MySQL DB CONNECTION INFORMATION
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+});
 
-// parse requests of content-type: application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-// parse requests of content-type: application/json
-app.use(bodyParser.json());
+// Initiate MySQL Connection
+connection.connect((err) => {
+  if (err) {
+    console.error(`error connecting: ${err.stack}`);
+    return;
+  }
+  console.log(`connected as id ${connection.threadId}`);
+});
 
 // ROUTER
 // The below points our server to a series of "route" files.
 // These routes give our server a "map" of how to respond when users visit or request data from various URLs.
 
-// simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to this application." });
-});
+  // If the main route is hit, then we initiate a SQL query to grab all records.
+  // All of the resulting records are stored in the variable "result."
+  connection.query(
+    "SELECT user_id, username, email FROM users",
+    (err, result) => {
+      if (err) throw err;
+      // We then begin building out HTML elements for the page.
+      let html = "<h1> Users </h1>";
 
-require("./routes/user.routes")(app);
-// require("./routes/htmlRoutes")(app);
+      // Here we begin an unordered list.
+      html += "<ul>";
+
+      // We then map over the retrieved records from the database to populate our HTML file.
+      result.map(({ user_id, username, email }) => {
+        html += `<li><p> ID: ${user_id}</p>`;
+        html += `<p>Username: ${username} </p>`;
+        html += `<p>Email: ${email}</p></li>`;
+        return html;
+      });
+
+      // We close our unordered list.
+      html += "</ul>";
+      console.log(html);
+
+      // Finally we send the user the HTML file we dynamically created.
+      res.send(html);
+    }
+  );
+});
 
 // LISTENER
 // The below code effectively "starts" our server
 app.listen(PORT, () => {
-  console.log(`Server is currently running on port ${PORT}.`);
+  console.log(`Server listening on: http://localhost:${PORT}`);
 });
